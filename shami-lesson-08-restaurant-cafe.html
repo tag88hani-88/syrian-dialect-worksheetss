@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arabic with Taghreed – Lesson 8 Quiz</title>
+<style>
+:root{--bg:#fbf5e9;--ink:#2d2a26;--g1:#2f8f83;--g2:#e8a23a;--ok:#2e9e5b;--bad:#d64545}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.5}
+header{background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;text-align:center;padding:26px 16px 22px;border-radius:0 0 28px 28px}
+.logo{display:inline-block;background:#fff;color:var(--g1);font-weight:800;font-size:18px;padding:8px 20px;border-radius:30px;margin-bottom:10px}
+h1{margin:0 0 6px;font-size:clamp(22px,5vw,32px)}
+header p{margin:0;opacity:.95}
+main{max-width:760px;margin:0 auto;padding:16px}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+input[type=text]{flex:1;min-width:180px;padding:11px 14px;font-size:16px;border:2px solid #e2d5b8;border-radius:12px;background:#fff}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:11px 18px;font-weight:700;color:#fff;background:var(--g1)}
+button:disabled{opacity:.45;cursor:not-allowed}
+#snd{background:#fff;color:var(--ink);border:2px solid #e2d5b8}
+.prog{height:12px;background:#eadfc6;border-radius:8px;overflow:hidden;margin-top:10px}
+#fill{height:100%;width:0;background:linear-gradient(90deg,var(--g1),var(--g2));transition:width .3s}
+#cnt{font-size:14px;margin-top:4px;font-weight:600}
+.card{border-radius:18px;padding:16px;margin:14px 0;color:#fff}
+.c0{background:#e4684f}.c1{background:#e8a23a}.c2{background:#2f8f83}.c3{background:#4a7fd1}.c4{background:#8a5cc4}.c5{background:#d65a99}
+.card h3{margin:0 0 12px;font-size:17px}
+.n{display:inline-block;background:#fff;color:var(--ink);border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;margin-right:8px;font-weight:800}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{background:#fff;color:var(--ink);text-align:center;font-size:18px;padding:12px 8px;border:3px solid transparent;border-radius:14px;min-height:56px;direction:rtl}
+.opt b{direction:ltr;display:inline-block;font-size:13px;background:#eee;border-radius:50%;width:22px;height:22px;line-height:22px;margin-left:6px}
+.opt.ok{background:#d8f5e3;border-color:var(--ok)}
+.opt.no{background:#fde0e0;border-color:var(--bad)}
+.card.done .opt{cursor:default}
+.exp{margin-top:10px;background:rgba(0,0,0,.22);border-radius:10px;padding:8px 12px;font-size:14px;display:none}
+#res{display:none;background:#fff;border-radius:18px;padding:18px;margin:16px 0;border:3px solid var(--g1)}
+#res h2{margin:0 0 6px;color:var(--g1)}
+.err{border-left:5px solid var(--bad);background:#fff6f6;padding:8px 12px;margin:8px 0;border-radius:8px;font-size:15px}
+.err .ar{direction:rtl;display:inline-block;font-size:17px}
+@media(max-width:420px){.opt{font-size:16px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">🌿 Arabic with Taghreed</div>
+<h1>Lesson 8: At the Restaurant &amp; Café – Quiz</h1>
+<p>Read the English question and choose the Shami answer.</p>
+</header>
+<main>
+<div class="bar">
+<div class="row"><input id="nm" type="text" placeholder="Student name" aria-label="Student name"><button id="snd" type="button">🔊 Sound on</button></div>
+<div class="prog"><div id="fill"></div></div>
+<div id="cnt">0 / 30 answered</div>
+</div>
+<div id="qs"></div>
+<div class="row"><button id="show" type="button" disabled>Show my result</button></div>
+<div id="res"></div>
+</main>
+<script>
+var Q=[
+["How do you say “waiter”?","جركسون",["شيف","منيو","طلب"],"جركسون = waiter; شيف = chef; طلب = order."],
+["How do you say “fork”?","شوكة",["معلقة","سكين","صحن"],"شوكة = fork; معلقة = spoon; سكين = knife."],
+["You want to see the menu. What do you say?","فيني شوف المنيو؟",["بدي أطلب","شو في عندكن؟","شو بتنصحني؟"],"فيني شوف المنيو؟ = Can I see the menu?"],
+["Which one is NOT cutlery or tableware?","ملح",["شوكة","معلقة","سكين"],"ملح = salt, a seasoning. The others are cutlery."],
+["Which one is NOT a drink?","كاتو",["شاي","كابتشينو","نسكافيه"],"كاتو = cake. The others are drinks."],
+["Which is “coffee with little sugar”?","قهوة عَ الريحة",["قهوة سادة","قهوة وسط","نسكافيه بحليب"],"سادة = no sugar; وسط = medium sugar; عَ الريحة = little sugar."],
+["Which is “Nescafé with milk”?","نسكافيه بحليب",["نسكافيه","كابتشينو","قهوة وسط"],"نسكافيه بحليب = Nescafé with milk."],
+["Which is “lemon and mint slush”?","بولو",["عصير فريش","بوظة عربية","شاي"],"بولو = lemon and mint slush."],
+["How do you say “a piece of cake”?","قطعة كاتو",["كرواسان","بسكوت","بوظة"],"قطعة كاتو = a piece of cake."],
+["Which is “double-apple shisha tobacco”?","معسّل تفاحتين",["أرجيلة","فحم","صحن سيجارة"],"أرجيلة = the hookah itself; معسّل تفاحتين = double-apple tobacco."],
+["You want to ask how much a dish costs. What do you say?","قديش سعرا؟",["الحساب لو سمحت","شو بتنصحني؟","فيني آخد... من فضلك؟"],"قديش سعرا؟ = How much is it?"],
+["You want to ask the waiter politely for water. What do you say?","بدي مي لو سمحت",["بدي قهوة","بدي عصير بردقان","بدي سلطة"],"مي = water."],
+["At the café you order a Nescafé with milk and a piece of cake. What do you say?","بدي نسكافيه بحليب وقطعة كاتو",["بدي نسكافيه وقطعة كاتو","بدي نسكافيه بحليب وبوظة","بدي كابتشينو وقطعة كاتو"],"نسكافيه بحليب = Nescafé with milk; قطعة كاتو = a piece of cake. Each wrong option changes one of the two items."],
+["How do you say “Do you (plural) want to order now?”","بدّكن تطلبوا هلّأ؟",["بدّك تطلب هلّأ؟","بدّن يطلبوا هلّأ؟","بدّنا نطلب هلّأ؟"],"بدّكن = you (plural), so the verb is تطلبوا. بدّك = you (singular); بدّن = they; بدّنا = we."],
+["How do you say “grilled chicken”?","جاج مشوي",["بروستد","كباب","ستيك"],"جاج مشوي = grilled chicken; بروستد = Broasted chicken."],
+["Which one is NOT a food?","محرمة",["كباب","تبولة","حمّص"],"محرمة = napkin."],
+["You enter a restaurant with a friend. What do you ask?","مرحبا، في طاولة لشخصين؟",["فيني شوف المنيو؟","شو في عندكن؟","بدي أطلب"],"في طاولة لشخصين؟ = Is there a table for two?"],
+["You want to know what the restaurant has. What do you ask?","شو في عندكن؟",["شو بتنصحني؟","قديش سعرا؟","شو بدك تاكل؟"],"شو في عندكن؟ = What do you have?"],
+["You want the waiter’s recommendation. What do you ask?","شو بتنصحني؟",["شو في عندكن؟","فيني آخد... من فضلك؟","قديش الحساب؟"],"شو بتنصحني؟ = What do you recommend?"],
+["You finished eating and want to pay. What do you say?","الحساب لو سمحت",["قديش سعرا؟","فيني شوف المنيو؟","بدي أطلب"],"الحساب لو سمحت = The bill, please."],
+["You want to say that you don’t want dessert.","ما بدي حلو",["بدي حلو","بدك حلو؟","بدو حلو"],"ما بدي = I don’t want."],
+["Which sentence would the WAITER say to a customer?","شو بدك تشرب؟",["شو بتنصحني؟","قديش سعرا؟","بدي أطلب"],"The waiter asks what you want. شو بتنصحني؟, قديش سعرا؟ and بدي أطلب are things the customer says."],
+["Your friend asks what you LIKE to drink. Which question is it?","شو بتحب تشرب؟",["شو بدك تشرب؟","شو بتحب تاكل؟","شو بدك تاكل؟"],"بتحب = like; بدك = want."],
+["The waiter asks «شو بدك تاكل؟». You want a salad right now. Which answer fits?","بدي آكل سلطة",["بحب آكل رز وجاج","بدي إشرب مي","بحب إشرب قهوة"],"بدك = what you want now, so answer with بدي + آكل (eat). بحب = a general “like”; إشرب = drink."],
+["How do you say “She wants a pizza”?","بدا بيتزا",["بدو بيتزا","بدي بيتزا","بدك بيتزا؟"],"بدّا = she wants; بدّو = he wants."],
+["How do you say “They want to eat before they leave”?","هنن بدّن ياكلوا قبل ما يروحوا",["هنن بدّنا ياكلوا قبل ما يروحوا","هنن بدّو ياكلوا قبل ما يروحوا","هنن بدّكن ياكلوا قبل ما يروحوا"],"هنن (they) goes with بدّن. بدّنا = we want, بدّو = he wants, بدّكن = you (pl.) want."],
+["Which sentence uses the WRONG form of بدّ?","هو بدّي برغر وبطاطا مقلية",["نحنا بدّنا طاولة قريبة من الشباك","هي بدّا سلطة","هنن بدّن ياكلوا قبل ما يروحوا"],"With هو (he) the form is بدّو, not بدّي (I). The other three sentences are correct."],
+["Which expression means “Can I have ..., please?”","فيني آخد... من فضلك؟",["فيني شوف المنيو؟","شو بتنصحني؟","شو في عندكن؟"],"فيني آخد... = Can I have ...? فيني شوف المنيو؟ = Can I see the menu? (asking permission to look, not to take something)."],
+["In the forms of بدّي (بدّك، بدّو، بدّا، بدّنا، بدّكن، بدّن), which part stays the same?","بد",["ـي","ـو","ـنا"],"The base بد stays fixed. Only the ending changes with the pronoun, because بدّي is a special expression of wanting, not a regular verb."],
+["How do you say “Do you (m.) want to see the menu before you order?”","بدّك تشوف المنيو قبل ما تطلب؟",["بدّو تشوف المنيو قبل ما تطلب؟","بدّي تشوف المنيو قبل ما تطلب؟","بدّكن تشوفوا المنيو قبل ما تطلبوا؟"],"بدّك is used for “you” singular; بدّو = he wants."]
+];
+var $=function(i){return document.getElementById(i)};
+var muted=false,ctx=null,order,answered,score,wrong;
+function tone(f,d,t){if(muted)return;try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();var o=ctx.createOscillator(),g=ctx.createGain();o.type=t||"sine";o.frequency.value=f;g.gain.setValueAtTime(.0001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.08,ctx.currentTime+.03);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+d)}catch(e){}}
+function good(){tone(660,.18);setTimeout(function(){tone(880,.25)},150)}
+function bad(){tone(220,.35,"triangle")}
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function esc(s){return s.replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})}
+function build(){
+order=Q.map(function(_,i){return i});answered=0;score=0;wrong=[];
+$("qs").innerHTML="";$("res").style.display="none";$("show").disabled=true;upd();
+order.forEach(function(qi,pos){
+var q=Q[qi],card=document.createElement("div");card.className="card c"+(pos%6);
+var h='<h3><span class="n">'+(pos+1)+'</span>'+esc(q[0])+'</h3><div class="opts"></div><div class="exp"></div>';
+card.innerHTML=h;var box=card.querySelector(".opts");
+shuf([q[1]].concat(q[2])).forEach(function(t,k){
+var b=document.createElement("button");b.type="button";b.className="opt";b.innerHTML="<b>"+(k+1)+"</b>"+esc(t);
+b.onclick=function(){pick(card,box,b,t,q,pos)};box.appendChild(b)});
+$("qs").appendChild(card)})}
+function pick(card,box,btn,t,q,pos){
+if(card.classList.contains("done"))return;card.classList.add("done");
+var all=box.querySelectorAll(".opt");
+for(var i=0;i<all.length;i++){var txt=all[i].textContent.replace(/^\d/,"");if(txt===q[1])all[i].classList.add("ok")}
+var ex=card.querySelector(".exp");
+if(t===q[1]){score++;good()}else{btn.classList.add("no");wrong.push({n:pos+1,q:q[0],you:t,right:q[1]});ex.style.display="block";ex.textContent="Explanation: "+q[3];bad()}
+answered++;upd()}
+function upd(){$("cnt").textContent=answered+" / 30 answered";$("fill").style.width=(answered/30*100)+"%";$("show").disabled=answered<30}
+function level(){return score>=27?["Excellent","Great work! You know this lesson very well. Move on to the next lesson with confidence."]:score>=21?["Very Good","Very good! Review the questions you missed, then try again for a top score."]:score>=15?["Good","Good start. Re-read the vocabulary and the forms of بدي, then try again."]:["Needs Practice","Go back to the lesson, practise the vocabulary and expressions aloud, then retake the quiz."]}
+function name(){return $("nm").value.trim()||"Student"}
+$("show").onclick=function(){
+var L=level(),h='<h2>Lesson 8 Result</h2><p><b>Name:</b> '+esc(name())+'<br><b>Score:</b> '+score+' / 30<br><b>Level:</b> '+L[0]+'</p><p>'+L[1]+'</p>';
+if(wrong.length){h+='<h3>Mistakes ('+wrong.length+')</h3>';wrong.forEach(function(w){h+='<div class="err"><b>'+w.n+'.</b> '+esc(w.q)+'<br>Your answer: <span class="ar">'+esc(w.you)+'</span><br>Correct: <span class="ar">'+esc(w.right)+'</span></div>'})}else h+='<p>🎉 No mistakes!</p>';
+h+='<div class="row"><button id="cp" type="button">Copy result</button><button id="ag" type="button">Try again</button></div>';
+var r=$("res");r.innerHTML=h;r.style.display="block";r.scrollIntoView({behavior:"smooth"});
+$("cp").onclick=function(){
+var t="Arabic with Taghreed – Lesson 8 Quiz\nName: "+name()+"\nScore: "+score+" / 30\nLevel: "+L[0]+"\n";
+if(wrong.length){t+="\nMistakes:\n";wrong.forEach(function(w){t+=w.n+". "+w.q+"\n   Your answer: "+w.you+"\n   Correct: "+w.right+"\n"})}
+var done=function(){$("cp").textContent="Copied ✓"};
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){fb(t,done)})}else fb(t,done)};
+$("ag").onclick=function(){build();window.scrollTo({top:0,behavior:"smooth"})}};
+function fb(t,done){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");done()}catch(e){}document.body.removeChild(a)}
+$("snd").onclick=function(){muted=!muted;$("snd").textContent=muted?"🔇 Sound off":"🔊 Sound on"};
+build();
+</script>
+</body>
+</html>
